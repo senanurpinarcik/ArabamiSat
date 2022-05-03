@@ -11,8 +11,12 @@ namespace ArabamiSatWeb.Models
             Sifir = 0,
             IkinciEl = 2
         }
-        public int Marka { get; set; }
-        public int Model { get; set; }
+
+        [ForeignKey("Marka")]
+        public int MarkaId { get; set; }
+
+        [ForeignKey("MarkaModel")]
+        public int MarkaModelId { get; set; }
         public int Yil { get; set; }
 
         [Column(TypeName = "decimal(18,2)")]
@@ -24,6 +28,9 @@ namespace ArabamiSatWeb.Models
 
         [Column(TypeName = "Nvarchar(MAX)")]
         public string Fotograf { get; set; }
+
+        public virtual Marka Marka { get; set; }
+        public virtual MarkaModel MarkaModel { get; set; }
 
     }
 }

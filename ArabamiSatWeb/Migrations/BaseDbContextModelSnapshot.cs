@@ -43,10 +43,10 @@ namespace ArabamiSatWeb.Migrations
                         .IsRequired()
                         .HasColumnType("Nvarchar(MAX)");
 
-                    b.Property<int>("Marka")
+                    b.Property<int>("MarkaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Model")
+                    b.Property<int>("MarkaModelId")
                         .HasColumnType("int");
 
                     b.Property<bool>("SilindiMi")
@@ -56,6 +56,10 @@ namespace ArabamiSatWeb.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MarkaId");
+
+                    b.HasIndex("MarkaModelId");
 
                     b.ToTable("Araba");
                 });
@@ -173,18 +177,64 @@ namespace ArabamiSatWeb.Migrations
                     b.ToTable("MarkaModel");
                 });
 
+            modelBuilder.Entity("ArabamiSatWeb.Models.UploadImageViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("SilindiMi")
+                        .HasColumnType("bit");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UploadImageViewModel");
+                });
+
+            modelBuilder.Entity("ArabamiSatWeb.Models.Araba", b =>
+                {
+                    b.HasOne("ArabamiSatWeb.Models.Marka", "Marka")
+                        .WithMany()
+                        .HasForeignKey("MarkaId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("ArabamiSatWeb.Models.MarkaModel", "MarkaModel")
+                        .WithMany()
+                        .HasForeignKey("MarkaModelId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Marka");
+
+                    b.Navigation("MarkaModel");
+                });
+
             modelBuilder.Entity("ArabamiSatWeb.Models.ArabaYorum", b =>
                 {
                     b.HasOne("ArabamiSatWeb.Models.Araba", "Araba")
                         .WithMany()
                         .HasForeignKey("ArabaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ArabamiSatWeb.Models.Kullanici", "Kullanici")
                         .WithMany()
                         .HasForeignKey("KullaniciId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Araba");
@@ -197,7 +247,7 @@ namespace ArabamiSatWeb.Migrations
                     b.HasOne("ArabamiSatWeb.Models.Marka", "Marka")
                         .WithMany()
                         .HasForeignKey("MarkaId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Marka");

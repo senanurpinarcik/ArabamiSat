@@ -6,6 +6,16 @@ namespace ArabamiSatWeb.Models.Base
     {
         public BaseDbContext(DbContextOptions<BaseDbContext> options) : base(options)
         { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
+            base.OnModelCreating(modelBuilder);
+        }
         public DbSet<Araba> Araba { get; set; }
         public DbSet<Kullanici> Kullanici { get; set; }
         public DbSet<Marka> Marka { get; set; }

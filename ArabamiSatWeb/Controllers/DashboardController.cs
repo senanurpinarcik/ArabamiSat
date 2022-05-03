@@ -6,26 +6,23 @@ namespace ArabamiSatWeb.Controllers
 {
     public class DashboardController : Controller
     {
-        private readonly BaseDbContext _context; 
+        private readonly BaseDbContext _context;  
 
-        [HttpPost]
         public async Task<string> UploadImage(IFormFile file)
         {
+            string pathAbsolute = "";
             if (file != null)
             {
                 string imageExtension = Path.GetExtension(file.FileName);
-
                 string imageName = Guid.NewGuid() + imageExtension;
-
-                string path = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/upload/{imageName}");
+                pathAbsolute = $"/upload/{imageName}";
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + pathAbsolute);
 
                 using var stream = new FileStream(path, FileMode.Create);
-
                 await file.CopyToAsync(stream);
-
             }
 
-            return RedirectToAction("UploadImage");
+            return pathAbsolute;
         }
         public DashboardController(BaseDbContext context)
         {
@@ -51,22 +48,19 @@ namespace ArabamiSatWeb.Controllers
             ViewBag.MarkaList = markaList;
 
             string aciklama = collection["Aciklama"];
-            IFormFile foto = collection.Files["Fotograf"];
-
-            IFormFile file = foto as IFormFile;
-            IFormFile file2 = (IFormFile) foto;
+            IFormFile fotograf = collection.Files.First(i => i.Name == "Fotograf");
+            string fotografPath = UploadImage(fotograf).Result;
 
 
             Araba araba = new Araba
-            {
-
+            { 
                 Aciklama = aciklama,
-                Fotograf = aciklama, //dü<elt
+                Fotograf = fotografPath,
                 Fiyat = 200000,
                 Yil = 2010,
                 DurumId = 0,
-                Marka = 0,
-                Model = 1,
+                MarkaId = 0,
+                MarkaModelId = 1,
                 SilindiMi = false
                 
             };
