@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Araba Ekle";
+    List<Marka> markaList = ViewBag.MarkaList;
+} 
+@model Araba
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="ArabaEkle" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group"> 
+                <label for="cars">Marka:</label>
+                <select name="cars" id="cars">                   
+                    @{
+                        foreach(Marka marka in markaList)
+                        {
+                             <option value="@marka.Id">@marka.Ad</option>
+                        }
+                    }                      
+                </select> 
+            </div>
+            <div class="form-group">
+                <label asp-for="Aciklama" class="control-label"></label>
+                <input asp-for="Aciklama" class="form-control" />
+                <span asp-validation-for="Aciklama" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Fotograf" class="control-label"></label>
+                <input asp-for="Fotograf" type="file" class="form-control" />
+                <span asp-validation-for="Fotograf" class="text-danger"></span>
+            </div> 
+
+           
+            <div class="form-group">
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
+            </div>
+
+        </form> 
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

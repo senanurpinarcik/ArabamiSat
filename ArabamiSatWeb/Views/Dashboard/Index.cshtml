@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Araba Listesi";
+}
+@model List<Araba>
+
+@{
+    foreach (Araba araba in Model)
+    {
+        <div class="col-md-12">
+            <span class="badge badge-warning">@araba.Aciklama</span>
+            <span class="badge badge-success">@araba.Fiyat</span>
+            <span class="badge badge-success">@araba.Marka</span>
+            <span class="badge badge-success">@araba.Model</span>
+            <span class="badge badge-success">@araba.Fotograf</span>
+        </div>
+    }
+}
