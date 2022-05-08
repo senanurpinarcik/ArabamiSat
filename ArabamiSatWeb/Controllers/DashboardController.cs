@@ -2,6 +2,8 @@
 using ArabamiSatWeb.Models;
 using ArabamiSatWeb.Models.Base;
 using System.Dynamic;
+using ArabamiSatWeb.Models.Araba;
+using ArabamiSatWeb.Models.Parametre;
 using Newtonsoft.Json;
 
 namespace ArabamiSatWeb.Controllers

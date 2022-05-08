@@ -1,8 +1,9 @@
-﻿using ArabamiSatWeb.Models.Base;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using ArabamiSatWeb.Models.Base;
+using ArabamiSatWeb.Models.Parametre;
 
-namespace ArabamiSatWeb.Models
+namespace ArabamiSatWeb.Models.Araba
 {
     public class Araba : BaseModel
     {

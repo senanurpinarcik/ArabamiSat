@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using ArabamiSatWeb.Models.Araba;
+using ArabamiSatWeb.Models.Parametre;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArabamiSatWeb.Models.Base
 {
@@ -16,11 +18,10 @@ namespace ArabamiSatWeb.Models.Base
 
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<Araba> Araba { get; set; }
-        public DbSet<Kullanici> Kullanici { get; set; }
+        public DbSet<Araba.Araba> Araba { get; set; }
+        public DbSet<Kullanici.Kullanici> Kullanici { get; set; }
         public DbSet<Marka> Marka { get; set; }
         public DbSet<MarkaModel> MarkaModel { get; set; }
-        public DbSet<ArabaYorum> ArabaYorum { get; set; }
-        public DbSet<UploadImageViewModel> UploadImageViewModel { get; set; }
+        public DbSet<ArabaYorum> ArabaYorum { get; set; } 
     }
 }

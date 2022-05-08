@@ -1,8 +1,8 @@
-﻿using ArabamiSatWeb.Models.Base;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
+using ArabamiSatWeb.Models.Base;
 
-namespace ArabamiSatWeb.Models
+namespace ArabamiSatWeb.Models.Kullanici
 {
     public class Kullanici : BaseModel
     {

@@ -1,7 +1,7 @@
-﻿using ArabamiSatWeb.Models.Base;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using ArabamiSatWeb.Models.Base;
 
-namespace ArabamiSatWeb.Models
+namespace ArabamiSatWeb.Models.Araba
 {
     public class ArabaYorum : BaseModel
     {
@@ -13,7 +13,7 @@ namespace ArabamiSatWeb.Models
 
         [Column(TypeName = "Nvarchar(500)")]
         public string Yorum { get; set; }
-         public virtual Araba Araba { get; set; }
-         public virtual Kullanici Kullanici { get; set; }
+         public virtual Models.Araba.Araba Araba { get; set; }
+         public virtual Kullanici.Kullanici Kullanici { get; set; }
     }
 }

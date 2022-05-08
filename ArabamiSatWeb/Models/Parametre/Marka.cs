@@ -1,7 +1,7 @@
-﻿using ArabamiSatWeb.Models.Base;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using ArabamiSatWeb.Models.Base;
 
-namespace ArabamiSatWeb.Models
+namespace ArabamiSatWeb.Models.Parametre
 {
     public class Marka : BaseModel
     {
