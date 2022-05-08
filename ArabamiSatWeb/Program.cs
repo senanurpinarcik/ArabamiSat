@@ -23,6 +23,10 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Dashboard}/{action=Index}/{id?}"
+    );
+app.MapControllerRoute(name: "arabam",
+    pattern: "arabam",
+    defaults: new { controller = "Arabam", action = "Arabalarim" });
 
 app.Run();

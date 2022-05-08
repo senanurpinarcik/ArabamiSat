@@ -1,16 +1,3 @@
 ﻿@{
-    ViewData["Title"] = "Araba Listesi";
-}
-@using ArabamiSatWeb.Models.Araba
-@model List<ArabamiSatWeb.Models.Araba.Araba>
-
-@{
-    foreach (Araba araba in Model)
-    {
-        <div class="col-md-12">
-            <span class="badge badge-warning">@araba.Aciklama</span>
-            <span class="badge badge-success">@araba.Fiyat</span> 
-            <span class="badge badge-success">@araba.Fotograf</span>
-        </div>
-    }
-}
+    ViewData["Title"] = "Ana Sayfa";
+} 

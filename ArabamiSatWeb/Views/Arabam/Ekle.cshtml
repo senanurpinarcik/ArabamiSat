@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="ArabaEkle" enctype="multipart/form-data">
+        <form asp-action="Ekle" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
@@ -97,7 +97,7 @@
 
         $.ajax({
         type: "POST",
-        url: "/Dashboard/GetMarkaModelList",
+        url: "/Arabam/GetMarkaModelList",
         data: dataPost,
         error: function (XMLHttpRequest, textStatus, errorThrown) {
             alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);

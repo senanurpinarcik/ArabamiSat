@@ -1,0 +1,32 @@
+﻿@{
+    ViewData["Title"] = "Marka Sil";
+}
+@model ArabamiSatWeb.Models.Parametre.Marka
+
+<div class="row">
+    <div class="col-md-12">
+        @if (ViewData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @ViewData["SuccessMessage"]
+            </div>
+        }
+        @if (ViewData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewData["ErrorMessage"]
+            </div>
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <h5 class="card-title">Marka : @Model.Ad</h5>
+            </div>
+        </div>
+    </div>
+    <a class="btn btn-sm btn-success" href="/Parametre/MarkaListe" role="button">Geri Dön</a>
+</div>
+
