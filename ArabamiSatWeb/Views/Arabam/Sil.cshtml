@@ -1,8 +1,7 @@
-﻿
-@{
-    ViewData["Title"] = "Marka Model Sil";
+﻿@{
+    ViewData["Title"] = "Araba Sil";
 }
-@model ArabamiSatWeb.Models.Parametre.MarkaModel
+@model ArabamiSatWeb.Models.Araba.Araba
 
 <div class="row">
     <div class="col-md-12">
@@ -24,11 +23,9 @@
     <div class="col-md-12">
         <div class="card mb-4 box-shadow">
             <div class="card-body">
-                <h5 class="card-title">Marka : @Model.Marka.Ad</h5>
-                <h5 class="card-title">Model : @Model.Ad</h5>
+                <h5 class="card-title">Araba : Silindi </h5>
             </div>
         </div>
     </div>
-    <a class="btn btn-sm btn-success" href="/Parametre/MarkaModelListe" role="button">Geri Dön</a>
+    <a class="btn btn-sm btn-success" href="/Arabam/Arabalarim" role="button">Geri Dön</a>
 </div>
-

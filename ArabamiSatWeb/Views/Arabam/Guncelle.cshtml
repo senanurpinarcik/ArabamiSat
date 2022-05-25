@@ -1,7 +1,137 @@
-﻿
-@{
-    ViewData["Title"] = "Guncelle";
+﻿@{
+    ViewData["Title"] = "Araba Güncelle";
+    List<Marka> markaList = ViewBag.MarkaList;
 }
+@using ArabamiSatWeb.Models.Araba
+@using ArabamiSatWeb.Models.Parametre
+@model ArabamiSatWeb.Models.Araba.Araba
 
-<h1>Guncelle</h1>
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Guncelle" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
 
+            <div class="form-group">
+                <label asp-for="MarkaId" class="control-label"></label>
+                <select asp-for="MarkaId" class="form-control" onchange="GetMarkaModel(this.value);">
+                    <option value="0">-Seçiniz-</option>
+
+
+                    @foreach (Marka marka in markaList)
+                    {
+                        <option value="@marka.Id">@marka.Ad</option>
+                    }
+
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="MarkaModelId" class="control-label"></label>
+                <select asp-for="MarkaModelId" class="form-control">
+                    <option value="0">-Seçiniz-</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Yil" class="control-label"></label>
+                <select asp-for="Yil" class="form-control">
+                    <option value="0">-Seçiniz-</option>
+
+                    @{
+                        int startYear = 1950;
+                        int endYear = DateTime.Now.Year;
+                        while (startYear <= endYear)
+                        {
+                            <option value="@endYear">@endYear</option>
+                            endYear--;
+                        }
+                    }
+
+                </select>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Fiyat" class="control-label"></label>
+                <textarea asp-for="Fiyat" class="form-control" rows="1"></textarea>
+                <span asp-validation-for="Fiyat" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="DurumId" class="control-label"></label>
+                <select asp-for="DurumId" class="form-control">
+                    <option value="0">-Seçiniz-</option>
+
+                    @foreach (Araba.DurumEnum durumEnum in Enum.GetValues<Araba.DurumEnum>())
+                    {
+                        <option value="@((int)durumEnum)">@durumEnum.ToString()</option>
+                    }
+
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Aciklama" class="control-label"></label>
+                <textarea asp-for="Aciklama" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Aciklama" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Fotograf" class="control-label"></label>
+                <input asp-for="Fotograf" type="file" class="form-control" />
+                <span asp-validation-for="Fotograf" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                <input type="submit" value="Kaydet" class="btn btn-primary" />
+            </div>
+
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+<script type="text/javascript">
+
+    function GetMarkaModel(markaId)
+    {
+        let dataPost = {
+            'markaId' : markaId
+        }
+
+        let item = $('#MarkaModelId');
+
+        $.ajax({
+        type: "POST",
+        url: "/Arabam/GetMarkaModelList",
+        data: dataPost,
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+        },
+        success: function (result) {
+             
+                let items = $.parseJSON(result);
+
+                let valSelected = $(item).val();
+
+                $(item).empty();
+                jQuery.each(items, function (i, val) {
+                    $(item).append('<option value="' + val.Id + '">' + val.Name + '</option>');
+                });
+
+                var c = $(item).children('option[value="' + valSelected + '"]');
+                if (valSelected != null && c.length > 0) {
+                    $(item).val(valSelected);
+                }
+        }
+    });
+    }
+
+    $(document).ready(function () {
+        let markaId = $('#MarkaId').val();
+        GetMarkaModel(markaId);
+    });
+</script>
+}

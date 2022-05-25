@@ -1,6 +1,7 @@
 ﻿using ArabamiSatWeb.Models.Base;
 using ArabamiSatWeb.Models.Parametre;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArabamiSatWeb.Controllers
 {
@@ -23,6 +24,7 @@ namespace ArabamiSatWeb.Controllers
 
         public IActionResult MarkaEkle()
         {
+
             return View();
         }
 
@@ -92,24 +94,28 @@ namespace ArabamiSatWeb.Controllers
 
         public IActionResult MarkaModelListe()
         {
-            List<MarkaModel> MarkaModelListe = _context.MarkaModel.ToList()
+            List<MarkaModel> MarkaModelListe = _context.MarkaModel.Include(i => i.Marka).ToList()
                 .Where(i => !i.SilindiMi).ToList();
             return View(MarkaModelListe);
         }
 
         public IActionResult MarkaModelEkle()
         {
+            List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
+            ViewBag.MarkaList = markaList;
             return View();
         }
 
         [HttpPost]
         public IActionResult MarkaModelEkle(IFormCollection collection)
         {
+            int markaId = Convert.ToInt32(collection["MarkaId"]);
             string ad = collection["Ad"];
 
             MarkaModel model = new MarkaModel()
             {
-                Ad = ad
+                Ad = ad,
+                MarkaId = markaId
             };
 
             _context.MarkaModel.Add(model);
@@ -120,12 +126,17 @@ namespace ArabamiSatWeb.Controllers
             else
                 ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
 
+            List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
+            ViewBag.MarkaList = markaList;
             return View(model);
         }
 
         public IActionResult MarkaModelGuncelle(int id)
         {
             MarkaModel model = _context.MarkaModel.Find(id)!;
+
+            List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
+            ViewBag.MarkaList = markaList;
             return View(model);
         }
 
@@ -133,9 +144,11 @@ namespace ArabamiSatWeb.Controllers
         public IActionResult MarkaModelGuncelle(IFormCollection collection)
         {
             int id = Convert.ToInt32(collection["Id"]);
+            int markaId = Convert.ToInt32(collection["MarkaId"]);
             string ad = collection["Ad"];
 
             MarkaModel model  = _context.MarkaModel.Find(id)!;
+            model.MarkaId = markaId;
             model.Ad = ad;
 
             _context.MarkaModel.Update(model);
@@ -146,12 +159,14 @@ namespace ArabamiSatWeb.Controllers
             else
                 ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
 
+            List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
+            ViewBag.MarkaList = markaList;
             return View(model);
         }
 
         public IActionResult MarkaModelSil(int id)
         {
-            MarkaModel model = _context.MarkaModel.Find(id)!;
+            MarkaModel model = _context.MarkaModel.Include(i => i.Marka).Single(i => i.Id == id);
             model.SilindiMi = true;
 
             _context.MarkaModel.Update(model);

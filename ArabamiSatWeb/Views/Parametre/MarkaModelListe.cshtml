@@ -1,7 +1,36 @@
-﻿
-@{
-    ViewData["Title"] = "MarkaModelListe";
-}
+﻿@using ArabamiSatWeb.Models.Parametre
+@model List<MarkaModel>
 
-<h1>MarkaModelListe</h1>
+@{
+    ViewData["Title"] = "Marka Model Liste";
+} 
+
+<div style="margin-bottom: 10px; text-align: right">
+    <a class="btn btn-sm btn-success" asp-area="" asp-controller="Parametre" asp-action="MarkaModelEkle" role="button">Yeni Ekle</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Marka</th> 
+        <th scope="col">Ad</th> 
+        <th scope="col" style="width: 150px">İşlemler</th> 
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (MarkaModel markaModel in Model)
+    {
+        <tr>
+            <th scope="row">@markaModel.Id</th>
+            <td>@markaModel.Marka.Ad</td>
+            <td>@markaModel.Ad</td>
+            <td>
+                <a class="btn btn-sm btn-primary" href="/Parametre/MarkaModelGuncelle?id=@markaModel.Id" role="button">Güncelle</a>
+                <a class="btn btn-sm btn-danger" href="/Parametre/MarkaModelSil?id=@markaModel.Id" role="button">Sil</a>
+            </td>
+        </tr>
+    } 
+    </tbody>
+</table>
 
