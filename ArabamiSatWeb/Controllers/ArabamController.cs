@@ -56,6 +56,10 @@ namespace ArabamiSatWeb.Controllers
         {
             return View(_context.Araba.Include(i => i.Marka).Include(i => i.MarkaModel).Where(i => !i.SilindiMi).ToList());
         }
+        public IActionResult ArabaAl()
+        {
+            return View(_context.Araba.Include(i => i.Marka).Include(i => i.MarkaModel).Where(i => !i.SilindiMi).ToList());
+        }
 
         public IActionResult Detay()
         {
@@ -97,9 +101,14 @@ namespace ArabamiSatWeb.Controllers
                 Aciklama = aciklama,
                 Fotograf = fotografPath
             };
-
+           
             _context.Araba.Add(araba);
-            _context.SaveChanges();
+            int returnValue = _context.SaveChanges();
+
+            if (returnValue > 0)
+                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
+            else
+                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
             return View(araba);
         }
 
@@ -113,8 +122,7 @@ namespace ArabamiSatWeb.Controllers
         [HttpPost]
         public IActionResult Guncelle(IFormCollection collection)
         {
-            List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
-            ViewBag.MarkaList = markaList;
+           
 
             int id = Convert.ToInt32(collection["Id"]);
             int markaId = Convert.ToInt32(collection["MarkaId"]);
@@ -137,7 +145,15 @@ namespace ArabamiSatWeb.Controllers
         
 
             _context.Araba.Update(model);
-            _context.SaveChanges();
+            int returnValue = _context.SaveChanges();
+
+            if (returnValue > 0)
+                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
+            else
+                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+
+            List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
+            ViewBag.MarkaList = markaList;
             return View(model);
         }
         public IActionResult Sil(int id)
