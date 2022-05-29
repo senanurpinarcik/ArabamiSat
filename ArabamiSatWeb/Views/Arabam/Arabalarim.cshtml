@@ -58,7 +58,6 @@
             </thead>
             <tbody>
             <tr>
-            
                 <td width="120" height="100"><img src="@(araba.Fotograf)" height="120" width="200"></td>
                 <td>@araba.Marka.Ad</td>
                 <td>@araba.MarkaModel.Ad</td>
@@ -68,11 +67,12 @@
                 <td>@araba.Aciklama</td>
             </tr>
             </tbody>
-            <tr >
-                <a class="btn btn-sm btn-primary" href="/Arabam/Guncelle?id=@araba.Id" role="button">Güncelle</a>
-                <a class="btn btn-sm btn-danger" href="/Arabam/Sil?id=@araba.Id" role="button">Sil</a>
-            </tr>
         </table>
+        <div align="justify">
+            <a class="btn btn-sm btn-primary" href="/Arabam/Guncelle?id=@araba.Id" role="button">Güncelle</a>
+            <a class="btn btn-sm btn-danger" href="/Arabam/Sil?id=@araba.Id" role="button">Sil</a>
+        </div>
+        
         
         
                     
