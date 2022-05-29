@@ -4,35 +4,75 @@
 @using ArabamiSatWeb.Models.Araba
 @model List<ArabamiSatWeb.Models.Araba.Araba>
 @{
-    
+    <input class="form-control" id="myInput" type="text" placeholder="Search..">
+    <br>
     foreach (Araba araba in Model)
     {
-        <table class="table">
-            <thead>
-            <tr>
-                <th scope="col"></th>
-                <th scope="col">Marka</th>
-                <th scope="col">Model</th>
-                <th scope="col">Yıl</th>
-                <th scope="col">Fiyat</th>
-                <th scope="col">Durum</th>
-                <th scope="col">Açıklama</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
+        //<table class="table">
+        //    <thead>
+        //    <tr>
+        //        <th scope="col"></th>
+        //        <th scope="col">Marka</th>
+        //        <th scope="col">Model</th>
+        //        <th scope="col">Yıl</th>
+        //        <th scope="col">Fiyat</th>
+        //        <th scope="col">Durum</th>
+        //        <th scope="col">Açıklama</th>
+        //    </tr>
+        //    </thead>
+        //    <tbody>
+        //    <tr>
             
-                <td width="120" height="100"><img src="@(araba.Fotograf)" height="120" width="200"></td>
-                <td>@araba.Marka.Ad</td>
-                <td>@araba.MarkaModel.Ad</td>
-                <td>@araba.Yil</td>
-                <td>@araba.Fiyat</td>
-                <td>@araba.DurumId</td>
-                <td>@araba.Aciklama</td>
-            </tr>
-            </tbody>
-        </table>
+        //        <td width="120" height="100"><img src="@(araba.Fotograf)" height="120" width="200"></td>
+        //        <td>@araba.Marka.Ad</td>
+        //        <td>@araba.MarkaModel.Ad</td>
+        //        <td>@araba.Yil</td>
+        //        <td>@araba.Fiyat</td>
+        //        <td>@araba.DurumId</td>
+        //        <td>@araba.Aciklama</td>
+        //    </tr>
+        //    </tbody>
+        //</table>
 
+        <div class="container">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th scope="col"></th>
+                    <th scope="col">Marka</th>
+                    <th scope="col">Model</th>
+                    <th scope="col">Yıl</th>
+                    <th scope="col">Fiyat</th>
+                    <th scope="col">Durum</th>
+                    <th scope="col">Açıklama</th>
+                </tr>
+                </thead>
+                <tbody id="myTable">
+                <tr>
+                    <td width="120" height="100"><img src="@(araba.Fotograf)" height="120" width="200"></td>
+                    <td>@araba.Marka.Ad</td>
+                    <td>@araba.MarkaModel.Ad</td>
+                    <td>@araba.Yil</td>
+                    <td>@araba.Fiyat</td>
+                    <td>@araba.DurumId</td>
+                    <td>@araba.Aciklama</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        
     }
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 }
+<script>
+    $(document).ready(function(){
+        $("#myInput").on("keyup", function() {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
