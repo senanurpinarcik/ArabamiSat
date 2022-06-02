@@ -99,7 +99,9 @@ namespace ArabamiSatWeb.Controllers
                 Fiyat = fiyat,
                 DurumId = durumId,
                 Aciklama = aciklama,
-                Fotograf = fotografPath
+                Fotograf = fotografPath,
+                EkleyenKullaniciId = -1,
+                EklenmeTarihi = DateTime.Now
             };
            
             _context.Araba.Add(araba);

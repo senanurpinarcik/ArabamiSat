@@ -22,9 +22,6 @@ namespace ArabamiSatWeb.Controllers
         {
             return View();
         }
-        public IActionResult AnaSayfa()
-        {
-            return View();
-        }
+        
     }
 }

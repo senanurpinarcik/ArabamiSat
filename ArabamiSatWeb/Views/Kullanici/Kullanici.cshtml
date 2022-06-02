@@ -1,0 +1,26 @@
+﻿
+@model List<ArabamiSatWeb.Models.Kullanici.Kullanici>
+@{
+    ViewData["Title"] = "Index";
+}
+<br/>
+<table class="table table-bordered">
+    <tr>
+        <th>Id</th>
+        <th>Kullanıcı Adı</th>
+        <th>Kullanıcı Soyadı</th>
+        <th>E-Posta</th>
+        <th>Sil</th>
+    </tr>
+    @foreach (var x in Model)
+    {
+        <tr>
+            <td>@x.Id</td>
+            <td>@x.Ad</td>
+            <td>@x.Soyad</td>
+            <td>@x.Eposta</td>
+            <td><a href="/Kullanici/Sil/@x.Id" class="btn btn-danger">Sil</a></td>
+            <td></td>
+        </tr>
+    }
+</table>
