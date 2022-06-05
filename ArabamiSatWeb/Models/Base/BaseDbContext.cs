@@ -23,7 +23,5 @@ namespace ArabamiSatWeb.Models.Base
         public DbSet<Marka> Marka { get; set; }
         public DbSet<MarkaModel> MarkaModel { get; set; }
         public DbSet<ArabaYorum> ArabaYorum { get; set; }
-        public DbSet<Admin.Admin> Admins { get; set; }
-
     }
 }

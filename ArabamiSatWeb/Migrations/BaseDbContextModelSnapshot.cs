@@ -22,27 +22,6 @@ namespace ArabamiSatWeb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("ArabamiSatWeb.Models.Admin.Admin", b =>
-                {
-                    b.Property<int>("AdminId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AdminId"), 1L, 1);
-
-                    b.Property<string>("Kullanici")
-                        .IsRequired()
-                        .HasColumnType("Varchar(20)");
-
-                    b.Property<string>("Parola")
-                        .IsRequired()
-                        .HasColumnType("Varchar(10)");
-
-                    b.HasKey("AdminId");
-
-                    b.ToTable("Admins");
-                });
-
             modelBuilder.Entity("ArabamiSatWeb.Models.Araba.Araba", b =>
                 {
                     b.Property<int>("Id")

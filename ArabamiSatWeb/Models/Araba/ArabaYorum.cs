@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using ArabamiSatWeb.Models.Base;
+﻿using ArabamiSatWeb.Models.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArabamiSatWeb.Models.Araba
 {
@@ -13,7 +13,7 @@ namespace ArabamiSatWeb.Models.Araba
 
         [Column(TypeName = "Nvarchar(500)")]
         public string Yorum { get; set; }
-         public virtual Models.Araba.Araba Araba { get; set; }
-         public virtual Kullanici.Kullanici Kullanici { get; set; }
+        public virtual Models.Araba.Araba Araba { get; set; }
+        public virtual Kullanici.Kullanici Kullanici { get; set; }
     }
 }

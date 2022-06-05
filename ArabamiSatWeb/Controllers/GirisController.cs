@@ -1,54 +1,83 @@
-﻿using System.Security.Claims;
-using ArabamiSatWeb.Models.Admin;
-using ArabamiSatWeb.Models.Base;
+﻿using ArabamiSatWeb.Models.Base;
 using ArabamiSatWeb.Models.Kullanici;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArabamiSatWeb.Controllers
 {
     public class GirisController : Controller
     {
         #region Initialize
+
         private readonly BaseDbContext _context;
+
         public GirisController(BaseDbContext context)
         {
             _context = context;
         }
+
         #endregion
-        [Route("Home/Index")]
-        public IActionResult GirisYap()
+
+        public IActionResult Giris()
         {
             return View();
         }
-        public async Task<IActionResult> GirisYap(IFormCollection collection)
+
+        [HttpPost]
+        public IActionResult Giris(IFormCollection collection)
         {
-            string eposta = collection["eposta"];
-            string sifre = collection["sifre"];
-            Kullanici kullanici = _context.Kullanici.FirstOrDefault(x => x.Eposta == eposta && x.Sifre == sifre);
+            string ePosta = collection["Eposta"];
+            string sifre = collection["Sifre"];
+
+            Kullanici kullanici = _context.Kullanici
+                .Where(x => x.Eposta == ePosta && x.Sifre == sifre).FirstOrDefault();
             if (kullanici != null)
             {
-                List<Claim> claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Email, kullanici.Eposta),
-                    new Claim(ClaimTypes.Sid,  kullanici.Id.ToString()),
-                    new Claim(ClaimTypes.Actor,  kullanici.YoneticiMi.ToString())
-                };
-                ClaimsIdentity useridentity = new ClaimsIdentity(claims, "Login");
-                ClaimsPrincipal principal = new ClaimsPrincipal(useridentity);
-                await HttpContext.SignInAsync(principal);
-                return RedirectToAction("Kullanici", "Kullanici");
+                HttpContext.Session.SetString("AdSoyad", kullanici.Ad + " " + kullanici.Soyad);
+                HttpContext.Session.SetString("KullaniciId", kullanici.Id.ToString());
+                HttpContext.Session.SetString("YoneticiMi", kullanici.YoneticiMi.ToString());
+                return RedirectToAction("ArabaAl", "Arabam");
+            }
+            else
+            {
+                TempData["Mesaj"] = "Geçersiz Eposta ya da Şifre!";
             }
             return View();
         }
-        
-        [HttpGet]
-        public async Task<IActionResult> CikisYap()
+        public IActionResult YeniKayit()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("GirisYap","Giris");
+            return View();
+        }
+
+
+        [HttpPost]
+        public IActionResult YeniKayit(IFormCollection collection)
+        {
+            List<Kullanici> kullanıcıList = _context.Kullanici.ToList();
+            ViewBag.MarkaList = kullanıcıList;
+
+            string ad = collection["Ad"];
+            string soyad = collection["Soyad"];
+            string ePosta = collection["Eposta"];
+            string sifre = collection["Sifre"];
+            
+            Kullanici kullanici = new Kullanici()
+            {
+                Ad = ad,
+                Soyad = soyad,
+                Eposta = ePosta,
+                Sifre = sifre
+            };
+
+            _context.Kullanici.Add(kullanici);
+            int returnValue = _context.SaveChanges();
+
+            if (returnValue > 0)
+                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
+            else
+                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            return View(kullanici);
         }
 
     }

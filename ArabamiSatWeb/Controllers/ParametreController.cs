@@ -1,4 +1,5 @@
-﻿using ArabamiSatWeb.Models.Base;
+﻿using ArabamiSatWeb.Helper_Codes;
+using ArabamiSatWeb.Models.Base;
 using ArabamiSatWeb.Models.Parametre;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ namespace ArabamiSatWeb.Controllers
         {
             _context = context;
         }
-        #endregion
+        #endregion 
 
         public IActionResult MarkaListe()
         {
@@ -31,11 +32,15 @@ namespace ArabamiSatWeb.Controllers
         [HttpPost]
         public IActionResult MarkaEkle(IFormCollection collection)
         {
-            string ad = collection["Ad"];
+            string ad = collection.Ad();
+            int kullaniciId = SessionHelper.GetKullaniciId();
+            
 
             Marka marka = new Marka
             {
-                Ad = ad
+                Ad = ad,
+                EkleyenKullaniciId = kullaniciId,
+                EklenmeTarihi = DateTime.Now
             };
 
             _context.Marka.Add(marka);
@@ -58,11 +63,14 @@ namespace ArabamiSatWeb.Controllers
         [HttpPost]
         public IActionResult MarkaGuncelle(IFormCollection collection)
         {
-            int id = Convert.ToInt32(collection["Id"]);
-            string ad = collection["Ad"];
+            int id = collection.Id();
+            string ad = collection.Ad();
+            int kullaniciId = SessionHelper.GetKullaniciId();
 
             Marka marka = _context.Marka.Find(id)!;
             marka.Ad = ad;
+            marka.GuncelleyenKullaniciId = kullaniciId;
+            marka.GuncellenmeTarihi = DateTime.Now;
 
             _context.Marka.Update(marka);
             int returnValue = _context.SaveChanges();
@@ -77,9 +85,12 @@ namespace ArabamiSatWeb.Controllers
 
         public IActionResult MarkaSil(int id)
         {
+            int kullaniciId = Convert.ToInt32(HttpContext.Session.GetString("KullaniciId"));
             Marka marka = _context.Marka.Find(id)!;
             marka.SilindiMi = true;
-
+            marka.SilenKullaniciId = kullaniciId;
+            marka.SilinmeTarihi = DateTime.Now;
+            
             _context.Marka.Update(marka);
             int returnValue = _context.SaveChanges();
 

@@ -1,6 +1,6 @@
+using ArabamiSatWeb.Helper_Codes;
 using ArabamiSatWeb.Models.Base;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,11 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<BaseDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DevConnection")));
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(x =>
-{
-    x.LoginPath = "/Giris/GirisYap/";
-});
-
+builder.Services.AddSession(options => options.IdleTimeout = TimeSpan.FromMinutes(10));
+builder.Services.AddHttpContextAccessor();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -24,7 +21,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
+app.UseSession();
+
+SessionHelper.Configure(app.Services.GetRequiredService<IHttpContextAccessor>());
 
 app.UseAuthorization();
 

@@ -1,10 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ArabamiSatWeb.Models;
-using ArabamiSatWeb.Models.Base;
-using System.Dynamic;
-using ArabamiSatWeb.Models.Araba;
-using ArabamiSatWeb.Models.Parametre;
-using Newtonsoft.Json;
+﻿using ArabamiSatWeb.Models.Base;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ArabamiSatWeb.Controllers
 {
@@ -16,12 +11,12 @@ namespace ArabamiSatWeb.Controllers
         {
             _context = context;
         }
-        #endregion  
-        
+        #endregion
+
         public IActionResult Index()
         {
             return View();
         }
-        
+
     }
 }

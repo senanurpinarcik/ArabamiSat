@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using ArabamiSatWeb.Models.Base;
+﻿using ArabamiSatWeb.Models.Base;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ArabamiSatWeb.Models.Parametre
 {

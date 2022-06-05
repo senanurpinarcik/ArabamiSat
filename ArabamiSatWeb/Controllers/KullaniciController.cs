@@ -14,8 +14,7 @@ namespace ArabamiSatWeb.Controllers
         {
             _context = context;
         }
-        #endregion 
-        [Authorize]
+        #endregion
         public IActionResult Kullanici()
         {
             List<Kullanici> kullaniciListe = _context.Kullanici.ToList()

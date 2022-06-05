@@ -1,6 +1,7 @@
-﻿using System.ComponentModel;
+﻿using ArabamiSatWeb.Models.Base;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using ArabamiSatWeb.Models.Base;
 
 namespace ArabamiSatWeb.Models.Kullanici
 {
@@ -20,6 +21,7 @@ namespace ArabamiSatWeb.Models.Kullanici
 
         [DisplayName("Şifre")]
         [Column(TypeName = "Nvarchar(50)")]
+        [DataType(DataType.Password)]
         public string Sifre { get; set; }
 
         public bool DogrulandiMi { get; set; }

@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using ArabamiSatWeb.Helper_Codes;
 using ArabamiSatWeb.Models.Araba;
 using ArabamiSatWeb.Models.Base;
 using ArabamiSatWeb.Models.Parametre;
@@ -81,8 +82,8 @@ namespace ArabamiSatWeb.Controllers
             List<Marka> markaList = _context.Marka.ToList();
             ViewBag.MarkaList = markaList;
 
-            int markaId = Convert.ToInt32(collection["MarkaId"]);
-            int markaModelId = Convert.ToInt32(collection["MarkaModelId"]);
+            int markaId = collection.MarkaId();
+            int markaModelId = collection.MarkaModelId();
             int yil = Convert.ToInt32(collection["Yil"]);
             decimal fiyat = Convert.ToDecimal(collection["Fiyat"]);
             int durumId = Convert.ToInt32(collection["DurumId"]);
