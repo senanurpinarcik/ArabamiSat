@@ -1,4 +1,5 @@
-﻿using ArabamiSatWeb.Models.Base;
+﻿using ArabamiSatWeb.Helper_Codes;
+using ArabamiSatWeb.Models.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArabamiSatWeb.Controllers
@@ -15,6 +16,7 @@ namespace ArabamiSatWeb.Controllers
 
         public IActionResult Index()
         {
+            MailHelper.SendMail("Test Başlık", "Şifre sıfırlama bla bla", "erkan.kamazoglu@gmail.com");
             return View();
         }
 

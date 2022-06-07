@@ -1,6 +1,8 @@
 ﻿@model ArabamiSatWeb.Models.Kullanici.Kullanici
 @{
 }
+
+@Html.Partial("Partials/_MessagePartial")
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Giris">
@@ -20,6 +22,9 @@
             </div>
             <div class="nav-item">
                 <a class="nav-link" asp-area="" asp-controller="Giris" asp-action="SifremiUnuttum">Şifremi Unuttum</a>
+            </div>
+            <div class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="Giris" asp-action="YeniKayit">Kayıt Ol</a>
             </div>
         </form>
     </div>

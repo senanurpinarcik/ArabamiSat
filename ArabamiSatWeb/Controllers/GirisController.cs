@@ -7,6 +7,7 @@ using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Text;
+using ArabamiSatWeb.Helper_Codes;
 using Microsoft.AspNetCore.Identity;
 
 
@@ -35,14 +36,15 @@ namespace ArabamiSatWeb.Controllers
         {
             string ePosta = collection["Eposta"];
             string sifre = collection["Sifre"];
+            string sifreMd5 = Md5Helper.CreateMd5(sifre);
 
             Kullanici kullanici = _context.Kullanici
-                .Where(x => x.Eposta == ePosta && x.Sifre == sifre).FirstOrDefault();
+                .Where(x => x.Eposta == ePosta && x.Sifre == sifreMd5).FirstOrDefault();
             if (kullanici != null)
             {
-                HttpContext.Session.SetString("AdSoyad", kullanici.Ad + " " + kullanici.Soyad);
-                HttpContext.Session.SetString("KullaniciId", kullanici.Id.ToString());
-                HttpContext.Session.SetString("YoneticiMi", kullanici.YoneticiMi.ToString());
+                SessionHelper.SetKullaniciId(kullanici.Id);
+                SessionHelper.SetAdSoyad(kullanici.Ad + " " + kullanici.Soyad);  
+                SessionHelper.SetYoneticiMi(kullanici.YoneticiMi);   
                 return RedirectToAction("ArabaAl", "Arabam");
             }
             else
@@ -51,29 +53,34 @@ namespace ArabamiSatWeb.Controllers
             }
             return View();
         }
+
+        public IActionResult Cikis()
+        {
+            SessionHelper.ClearSession();
+            return RedirectToAction("Giris");
+        }
+
         public IActionResult YeniKayit()
         {
             return View();
         }
 
-
         [HttpPost]
         public IActionResult YeniKayit(IFormCollection collection)
         {
-            List<Kullanici> kullanıcıList = _context.Kullanici.ToList();
-            ViewBag.MarkaList = kullanıcıList;
-
             string ad = collection["Ad"];
             string soyad = collection["Soyad"];
             string ePosta = collection["Eposta"];
             string sifre = collection["Sifre"];
+            string sifreMd5 = Md5Helper.CreateMd5(sifre);
 
-            Kullanici kullanici = new Kullanici()
+            Kullanici kullanici = new Kullanici
             {
                 Ad = ad,
                 Soyad = soyad,
                 Eposta = ePosta,
-                Sifre = sifre
+                Sifre = sifreMd5,
+                EklenmeTarihi = DateTime.Now
             };
 
             _context.Kullanici.Add(kullanici);
@@ -85,6 +92,7 @@ namespace ArabamiSatWeb.Controllers
                 ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
             return View(kullanici);
         }
+
         public ActionResult SifremiUnuttum()
         {
             return View();
@@ -93,38 +101,35 @@ namespace ArabamiSatWeb.Controllers
         [HttpPost]
         public ActionResult SifremiUnuttum(IFormCollection collection)
         {
-            string ad = collection["Ad"];
-            string soyad = collection["Soyad"];
             string ePosta = collection["Eposta"];
-            string sifre = collection["Sifre"];
 
-            Kullanici kullanici = _context.Kullanici
-                .Where(x => x.Eposta == ePosta).FirstOrDefault();
-            Guid rastgele = Guid.NewGuid();
-                if (kullanici != null)
+            Kullanici? kullanici = _context.Kullanici
+                .FirstOrDefault(x => x.Eposta == ePosta);
+            
+            if (kullanici != null)
+            {
+                Guid rastgele = Guid.NewGuid();
+                string sifre = rastgele.ToString().Substring(0, 8);
+                string sifreMd5 = Md5Helper.CreateMd5(sifre);
+
+                kullanici.Sifre = sifreMd5;  
+                int returnValue = _context.SaveChanges();
+
+                if (returnValue > 0)
+                    ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
+                else
                 {
-                    kullanici.Sifre = rastgele.ToString().Substring(0, 8);
-                    _context.SaveChanges();
-                    SmtpClient client = new SmtpClient("smtp.gmail.com", 587);
-                    client.UseDefaultCredentials = false;
-                    client.Timeout = 10000;
-                    MailMessage mail = new MailMessage();
-                    mail.From = new MailAddress("uu7215440@gmail.com", "Şifre sıfırlama");
-                    mail.To.Add(kullanici.Eposta);
-                    mail.IsBodyHtml = true;
-                    mail.BodyEncoding = Encoding.UTF8;
-                    mail.DeliveryNotificationOptions = DeliveryNotificationOptions.OnFailure;
-                    mail.Subject = "Şifre Değiştirme İsteği:";
-                    mail.Body += "Merhaba " + kullanici.Ad + "" + kullanici.Soyad + "<br/> Şifreniz: " +
-                                 kullanici.Sifre;
-                    NetworkCredential net = new NetworkCredential("senanurpinarcik@gmail.com", "e6b57e2d");
-                    client.Credentials = net;
-                    client.EnableSsl = true;
-                    client.Send(mail);
+                    ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+                    return View();
                 }
-                return RedirectToAction("Giris");
+                    
+                string mailIcerik = "Merhaba " + kullanici.Ad + "" + kullanici.Soyad + "<br/> Şifreniz: " +
+                                    sifre;
+                MailHelper.SendMail("Şifre Değişikliği", mailIcerik, kullanici.Eposta); 
             }
-          
+            return RedirectToAction("Giris");
         }
-        
+
     }
+
+}

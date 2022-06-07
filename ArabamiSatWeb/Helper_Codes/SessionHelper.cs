@@ -20,7 +20,13 @@ namespace ArabamiSatWeb.Helper_Codes
         {
             get { return httpContextAccessor?.HttpContext; }
         }
-        public static  int GetKullaniciId()
+
+        public static void ClearSession()
+        {
+            HttpContext.Session.Clear();
+        }
+
+        public static int GetKullaniciId()
         {
             int kullaniciId = Convert.ToInt32(HttpContext.Session.GetString("KullaniciId"));
 
@@ -30,7 +36,6 @@ namespace ArabamiSatWeb.Helper_Codes
         {
             HttpContext.Session.SetString("KullaniciId", kullaniciId.ToString());
         }
-
         public static string GetAdSoyad()
         {
             string adSoyad = HttpContext.Session.GetString("AdSoyad");
@@ -45,9 +50,9 @@ namespace ArabamiSatWeb.Helper_Codes
             bool yoneticiMi = Convert.ToBoolean(HttpContext.Session.GetString("YoneticiMi"));
             return yoneticiMi;
         }
-        public static void SetYoneticiMi(string yoneticiMi)
+        public static void SetYoneticiMi(bool yoneticiMi)
         {
-            HttpContext.Session.SetString("YoneticiMi", yoneticiMi);
+            HttpContext.Session.SetString("YoneticiMi", yoneticiMi.ToString());
         }
 
     }

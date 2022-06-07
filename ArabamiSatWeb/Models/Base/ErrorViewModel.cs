@@ -1,4 +1,4 @@
-namespace ArabamiSatWeb.Models
+namespace ArabamiSatWeb.Models.Base
 {
     public class ErrorViewModel
     {

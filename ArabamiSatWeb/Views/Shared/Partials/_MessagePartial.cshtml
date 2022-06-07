@@ -1,0 +1,16 @@
+﻿<div class="row">
+    <div class="col-md-12">
+        @if (ViewData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success" role="alert">
+                @ViewData["SuccessMessage"]
+            </div>
+        }
+        @if (ViewData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ViewData["ErrorMessage"]
+            </div>
+        }
+    </div>
+</div>
