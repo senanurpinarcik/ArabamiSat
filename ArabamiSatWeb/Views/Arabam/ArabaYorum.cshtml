@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "Yorum";
+}
+@using ArabamiSatWeb.Models.Araba
+@model List<ArabamiSatWeb.Models.Araba.ArabaYorum>
+ 
+<div class="content-form">
+    <h3>Bir yorum yapın</h3>
+    <form>
+        <input type="text" placeholder="Eposta"/>
+        <textarea placeholder="Yorum"></textarea>
+        <input type ="submit" value="Gönder"/>
+    </form>
+</div>

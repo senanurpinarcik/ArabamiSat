@@ -62,11 +62,6 @@ namespace ArabamiSatWeb.Controllers
             return View(_context.Araba.Include(i => i.Marka).Include(i => i.MarkaModel).Where(i => !i.SilindiMi).ToList());
         }
 
-        public IActionResult Detay()
-        {
-            return View();
-        }
-
         
         public IActionResult Ekle()
         {
@@ -125,8 +120,6 @@ namespace ArabamiSatWeb.Controllers
         [HttpPost]
         public IActionResult Guncelle(IFormCollection collection)
         {
-           
-
             int id = Convert.ToInt32(collection["Id"]);
             int markaId = Convert.ToInt32(collection["MarkaId"]);
             int markaModelId = Convert.ToInt32(collection["MarkaModelId"]);
@@ -175,5 +168,41 @@ namespace ArabamiSatWeb.Controllers
             return View(model);
             
         }
+        public IActionResult ArabaDetay(IFormCollection collection)
+        {
+            int markaId = collection.MarkaId();
+            int markaModelId = collection.MarkaModelId();
+            int id = collection.Id();
+            Araba model = _context.Araba.Find(id)!;
+            List<Araba> arabaList = _context.Araba.ToList().Where(i => i.Id == collection.Id() && i.MarkaId == markaId && i.MarkaModelId == markaModelId).ToList();
+            ViewBag.ArabaList = arabaList;
+            return View(arabaList);
+        }
+        public IActionResult ArabaYorum()
+        {
+            List<ArabaYorum> arabaYorumList = _context.ArabaYorum.ToList().Where(i => !i.SilindiMi).ToList();
+            ViewBag.ArabaYorumList = arabaYorumList;
+
+            return PartialView();
+        }
+
+        [HttpPost]
+        public IActionResult ArabaYorum(IFormCollection collection)
+        {
+            string yorum = collection["Yorum"];
+            int arabaId = Convert.ToInt32(collection["ArabaId"]);
+            int ekleyenkullaniciId = SessionHelper.GetKullaniciId();
+            string adSoyad = SessionHelper.GetAdSoyad();
+            ArabaYorum arabaYorum = new ArabaYorum
+            {
+                Yorum = yorum,
+                ArabaId = arabaId,
+                EkleyenKullaniciId = -1,
+                EklenmeTarihi = DateTime.Now
+            };
+            _context.ArabaYorum.Add(arabaYorum);
+            return View();
+        }
+
     }
 }

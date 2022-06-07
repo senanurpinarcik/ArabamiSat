@@ -1,4 +1,5 @@
 ﻿@using ArabamiSatWeb.Helper_Codes
+@using ArabamiSatWeb.Models.Kullanici
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,14 +29,14 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Ana Sayfa</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Giris" asp-action="YeniKayit">Kayıt Ol</a>
-                    </li>
-                    
+
                     @if (kullaniciId > 0)
                     {
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Arabam" asp-action="Arabalarim">Araba Sat</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Arabam" asp-action="ArabaAl">Araba Al</a>
                         </li>
                     }
                     else
@@ -68,8 +69,10 @@
                         <li class="nav-item" style="text-align: right">
                             <a class="nav-link" asp-area="" asp-controller="Giris" asp-action="Giris">Giriş</a>
                         </li>
+                        <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Giris" asp-action="YeniKayit">Kayıt Ol</a>
+                        </li>
                     }
-                  
                 </ul>
                 
                 <span class="navbar-text">

@@ -3,6 +3,9 @@ using ArabamiSatWeb.Models.Kullanici;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using ArabamiSatWeb.Helper_Codes;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace ArabamiSatWeb.Controllers
 {
@@ -21,7 +24,7 @@ namespace ArabamiSatWeb.Controllers
                 .Where(i => !i.SilindiMi).ToList();
             return View(kullaniciListe);
         }
-        
+
         public IActionResult Sil(int id)
         {
             Kullanici model = _context.Kullanici.Find(id)!;
@@ -36,7 +39,6 @@ namespace ArabamiSatWeb.Controllers
                 ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
 
             return View(model);
-
         }
     }
 }

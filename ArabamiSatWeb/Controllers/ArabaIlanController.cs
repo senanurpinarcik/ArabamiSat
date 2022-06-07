@@ -1,5 +1,10 @@
-﻿using ArabamiSatWeb.Models.Base;
+﻿using ArabamiSatWeb.Helper_Codes;
+using ArabamiSatWeb.Models.Araba;
+using ArabamiSatWeb.Models.Base;
+using ArabamiSatWeb.Models.Kullanici;
+using ArabamiSatWeb.Models.Parametre;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ArabamiSatWeb.Controllers
 {
@@ -11,6 +16,8 @@ namespace ArabamiSatWeb.Controllers
         {
             _context = context;
         }
-        #endregion 
+        #endregion
+
+        
     }
 }

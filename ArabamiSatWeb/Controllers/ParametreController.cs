@@ -133,9 +133,13 @@ namespace ArabamiSatWeb.Controllers
             int returnValue = _context.SaveChanges();
 
             if (returnValue > 0)
+            {
                 ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
+            }
             else
+            {
                 ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            }
 
             List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
             ViewBag.MarkaList = markaList;
