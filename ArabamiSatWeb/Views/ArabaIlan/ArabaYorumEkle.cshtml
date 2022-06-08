@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Yorum Ekle";
+    int arabaId = ViewBag.ArabaId;
+}
+@model ArabamiSatWeb.Models.Araba.ArabaYorum
+
+@Html.Partial("Partials/_MessagePartial")
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="ArabaYorumEkle" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="ArabaId" value="@arabaId"/>
+            <div class="form-group">
+                <label asp-for="Yorum" class="control-label"></label> 
+                <textarea asp-for="Yorum" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Yorum" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Kaydet" class="btn btn-sm btn-primary" />
+                <a class="btn btn-sm btn-success" href="/ArabaIlan/ArabaDetay?id=@arabaId" role="button">Geri Dön</a>
+            </div> 
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script type="text/javascript">
+
+    </script>
+}

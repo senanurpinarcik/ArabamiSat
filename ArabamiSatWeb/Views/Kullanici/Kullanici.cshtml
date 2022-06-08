@@ -1,26 +1,43 @@
-﻿
+﻿@using ArabamiSatWeb.Models.Kullanici
 @model List<ArabamiSatWeb.Models.Kullanici.Kullanici>
 @{
-    ViewData["Title"] = "";
-}
-<br/>
-<table class="table table-bordered">
-    <tr>
-        <th>Id</th>
-        <th>Kullanıcı Adı</th>
-        <th>Kullanıcı Soyadı</th>
-        <th>E-Posta</th>
-        <th>Sil</th>
-    </tr>
-    @foreach (var x in Model)
-    {
+    ViewData["Title"] = "Kullanıcı Listesi";
+} 
+
+<table class="table table-striped">
+    <thead>
         <tr>
-            <td>@x.Id</td>
-            <td>@x.Ad</td>
-            <td>@x.Soyad</td>
-            <td>@x.Eposta</td>
-            <td><a href="/Kullanici/Sil/@x.Id" class="btn btn-danger">Sil</a></td>
-            <td></td>
+            <th>#</th>
+            <th>Ad</th>
+            <th>Soyad</th>
+            <th>E-Posta</th>
+            <th>Kullanıcı Doğrulandı Mı?</th>
+            <th>Yönetici Mi?</th>
+            <th>Eklenme Tarihi</th>
+            <th>İşlemler</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @foreach (Kullanici kullanici in Model)
+        {
+            <tr>
+                <td>@kullanici.Id</td>
+                <td>@kullanici.Ad</td>
+                <td>@kullanici.Soyad</td>
+                <td>@kullanici.Eposta</td>
+                <td>@(kullanici.DogrulandiMi ? "Evet" : "Hayır")</td>
+                <td>@(kullanici.YoneticiMi ? "Evet" : "Hayır")</td>
+                <td>@kullanici.EklenmeTarihi</td>
+                @if (kullanici.YoneticiMi)
+                {
+                    <td><a href="#" class="btn btn-danger" style="background-color: rgba(90, 15, 20, 0.76) !important;cursor: not-allowed" title="Yönetici için silme işlemi yapılamaz">Sil</a></td>
+                }
+                else
+                {
+                    <td><a href="/Kullanici/Sil/@kullanici.Id" class="btn btn-danger">Sil</a></td>
+                }
+               
+            </tr>
+        }
+    </tbody>
 </table>

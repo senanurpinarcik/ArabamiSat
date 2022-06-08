@@ -1,15 +1,12 @@
 ﻿using ArabamiSatWeb.Models.Base;
-using ArabamiSatWeb.Models.Kullanici;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography;
+using ArabamiSatWeb.Models.Kullanici; 
+using Microsoft.AspNetCore.Mvc; 
+using ArabamiSatWeb.Controllers.Base;
 using ArabamiSatWeb.Helper_Codes;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace ArabamiSatWeb.Controllers
 {
-    public class KullaniciController : Controller
+    public class KullaniciController : BaseController
     {
         #region Initialize
         private readonly BaseDbContext _context;
@@ -29,14 +26,12 @@ namespace ArabamiSatWeb.Controllers
         {
             Kullanici model = _context.Kullanici.Find(id)!;
             model.SilindiMi = true;
+            model.SilenKullaniciId = SessionHelper.GetKullaniciId();
+            model.SilinmeTarihi = DateTime.Now;
 
             _context.Kullanici.Update(model);
             int returnValue = _context.SaveChanges();
-
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            ContextMessageHandler(returnValue);
 
             return View(model);
         }

@@ -6,6 +6,7 @@
 @using ArabamiSatWeb.Models.Parametre
 @model ArabamiSatWeb.Models.Araba.Araba
 
+@Html.Partial("Partials/_MessagePartial")
 <div class="row">
     <div class="col-md-12">
         <form asp-action="Ekle" enctype="multipart/form-data">
@@ -72,17 +73,18 @@
 
                 </select>
             </div>
-            
+
 
             <div class="form-group">
                 <label asp-for="Fotograf" class="control-label"></label>
-                <input asp-for="Fotograf" type="file" class="form-control" />
+                <input asp-for="Fotograf" type="file" class="form-control"/>
                 <span asp-validation-for="Fotograf" class="text-danger"></span>
             </div>
 
 
             <div class="form-group">
-                <input type="submit" value="Kaydet" class="btn btn-primary" />
+                <input type="submit" value="Kaydet" class="btn btn-sm btn-primary" />
+                <a class="btn btn-sm btn-success" href="/Arabam/Arabalarim" role="button">Geri Dön</a>
             </div>
 
         </form>
@@ -91,49 +93,48 @@
 
 @section Scripts {
     @{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    function GetMarkaModel(markaId)
-    {
-        let dataPost = {
-            'markaId' : markaId
-        }
+        function GetMarkaModel(markaId) {
+            let dataPost = {
+                'markaId': markaId
+            }
 
-        let item = $('#MarkaModelId');
+            let item = $('#MarkaModelId');
 
-        $.ajax({
-        type: "POST",
-        url: "/Arabam/GetMarkaModelList",
-        data: dataPost,
-        error: function (XMLHttpRequest, textStatus, errorThrown) {
-            alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
-        },
-        success: function (result) {
-             
-                let items = $.parseJSON(result);
+            $.ajax({
+                type: "POST",
+                url: "/Arabam/GetMarkaModelList",
+                data: dataPost,
+                error: function(XMLHttpRequest, textStatus, errorThrown) {
+                    alert("Request: " + XMLHttpRequest.toString() + "\n\nStatus: " + textStatus + "\n\nError: " + errorThrown);
+                },
+                success: function(result) {
 
-                let valSelected = $(item).val();
+                    let items = $.parseJSON(result);
 
-                $(item).empty();
-                jQuery.each(items, function (i, val) {
-                    $(item).append('<option value="' + val.Id + '">' + val.Name + '</option>');
-                });
+                    let valSelected = $(item).val();
 
-                var c = $(item).children('option[value="' + valSelected + '"]');
-                if (valSelected != null && c.length > 0) {
-                    $(item).val(valSelected);
+                    $(item).empty();
+                    jQuery.each(items,
+                        function(i, val) {
+                            $(item).append('<option value="' + val.Id + '">' + val.Name + '</option>');
+                        });
+
+                    var c = $(item).children('option[value="' + valSelected + '"]');
+                    if (valSelected != null && c.length > 0) {
+                        $(item).val(valSelected);
+                    }
                 }
+            });
         }
-    });
-    }
 
-    $(document).ready(function () {
-        let markaId = $('#MarkaId').val();
-        GetMarkaModel(markaId);
-    });
-</script>
+        $(document).ready(function() {
+            let markaId = $('#MarkaId').val();
+            GetMarkaModel(markaId);
+        });
+    </script>
 }
-

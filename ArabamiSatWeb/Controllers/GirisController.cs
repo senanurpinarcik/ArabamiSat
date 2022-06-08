@@ -1,22 +1,15 @@
 ﻿using ArabamiSatWeb.Models.Base;
 using ArabamiSatWeb.Models.Kullanici;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.IO;
-using System.Net;
-using System.Net.Mail;
-using System.Text;
+using ArabamiSatWeb.Controllers.Base;
 using ArabamiSatWeb.Helper_Codes;
-using Microsoft.AspNetCore.Identity;
 
 
 namespace ArabamiSatWeb.Controllers
 {
-    public class GirisController : Controller
+    public class GirisController : BaseController
     {
-        #region Initialize
-
+        #region Initialize 
         private readonly BaseDbContext _context;
 
         public GirisController(BaseDbContext context)
@@ -26,47 +19,55 @@ namespace ArabamiSatWeb.Controllers
 
         #endregion
 
-        public IActionResult Giris()
+        public IActionResult Index()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Giris(IFormCollection collection)
+        public IActionResult Index(IFormCollection collection)
         {
             string ePosta = collection["Eposta"];
             string sifre = collection["Sifre"];
             string sifreMd5 = Md5Helper.CreateMd5(sifre);
 
-            Kullanici kullanici = _context.Kullanici
-                .Where(x => x.Eposta == ePosta && x.Sifre == sifreMd5).FirstOrDefault();
+            Kullanici? kullanici = _context.Kullanici
+                .FirstOrDefault(x => x.Eposta == ePosta && x.Sifre == sifreMd5 && !x.SilindiMi);
             if (kullanici != null)
             {
-                SessionHelper.SetKullaniciId(kullanici.Id);
-                SessionHelper.SetAdSoyad(kullanici.Ad + " " + kullanici.Soyad);  
-                SessionHelper.SetYoneticiMi(kullanici.YoneticiMi);   
-                return RedirectToAction("ArabaAl", "Arabam");
+                if (kullanici.DogrulandiMi)
+                {
+                    SessionHelper.SetKullaniciId(kullanici.Id);
+                    SessionHelper.SetAdSoyad(kullanici.Ad + " " + kullanici.Soyad);
+                    SessionHelper.SetYoneticiMi(kullanici.YoneticiMi);
+                    return RedirectToAction("Arabalarim", "Arabam");
+                }
+                else
+                {
+                    KullaniciDogrulamaKoduGonder(kullanici, out string anahtarMd5);
+                    return RedirectToAction("KullaniciDogrulama", new { id = kullanici.Id,anahtar = anahtarMd5 });
+                }
             }
             else
             {
-                ViewData["ErrorMessage"] = "Geçersiz Eposta ya da Şifre!";
+                ViewData["ErrorMessage"] = "Geçersiz E-posta ya da Şifre!";
             }
             return View();
         }
 
         public IActionResult Cikis()
         {
-            SessionHelper.ClearSession();
-            return RedirectToAction("Giris");
+            SessionHelper.EndSession();
+            return RedirectToAction("Index");
         }
 
-        public IActionResult YeniKayit()
+        public IActionResult KayitOl()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult YeniKayit(IFormCollection collection)
+        public IActionResult KayitOl(IFormCollection collection)
         {
             string ad = collection["Ad"];
             string soyad = collection["Soyad"];
@@ -87,32 +88,35 @@ namespace ArabamiSatWeb.Controllers
             int returnValue = _context.SaveChanges();
 
             if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
+            {
+                KullaniciDogrulamaKoduGonder(kullanici, out string anahtarMd5);
+                return RedirectToAction("KullaniciDogrulama", new { id = kullanici.Id, anahtar = anahtarMd5 });
+            }
             else
                 ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
             return View(kullanici);
         }
 
-        public ActionResult SifremiUnuttum()
+        public IActionResult SifremiUnuttum()
         {
             return View();
         }
 
         [HttpPost]
-        public ActionResult SifremiUnuttum(IFormCollection collection)
+        public IActionResult SifremiUnuttum(IFormCollection collection)
         {
             string ePosta = collection["Eposta"];
 
             Kullanici? kullanici = _context.Kullanici
-                .FirstOrDefault(x => x.Eposta == ePosta);
-            
+                .FirstOrDefault(x => x.Eposta == ePosta && !x.SilindiMi);
+
             if (kullanici != null)
             {
-                Guid rastgele = Guid.NewGuid();
-                string sifre = rastgele.ToString().Substring(0, 8);
+                Guid guidVal = Guid.NewGuid();
+                string sifre = guidVal.ToString().Substring(0, 8);
                 string sifreMd5 = Md5Helper.CreateMd5(sifre);
 
-                kullanici.Sifre = sifreMd5;  
+                kullanici.Sifre = sifreMd5;
                 int returnValue = _context.SaveChanges();
 
                 if (returnValue > 0)
@@ -120,16 +124,63 @@ namespace ArabamiSatWeb.Controllers
                 else
                 {
                     ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
-                    return View();
+                    return View(kullanici);
                 }
-                    
-                string mailIcerik = "Merhaba " + kullanici.Ad + "" + kullanici.Soyad + "<br/> Şifreniz: " +
-                                    sifre;
-                MailHelper.SendMail("Şifre Değişikliği", mailIcerik, kullanici.Eposta); 
+
+                string mailIcerik = "Merhaba " + kullanici.Ad + "" + kullanici.Soyad + "<br/> Şifreniz: " + sifre;
+                MailHelper.SendMail("Şifre Değişikliği", mailIcerik, kullanici.Eposta);
             }
-            return RedirectToAction("Giris");
+            else
+            {
+                ViewData["ErrorMessage"] = "Geçersiz E-posta";
+            }
+
+            return View();
         }
 
-    }
+        public IActionResult KullaniciDogrulama(int id, string anahtar)
+        {
+            Kullanici kullanici = _context.Kullanici.Find(id)!;
+            ViewData["InfoMessage"] = "E-postanıza gelen doğrulama kodunu aşağıya girin.";
+            ViewBag.Anahtar = anahtar;
+            return View(kullanici);
+        }
 
+        [HttpPost]
+        public IActionResult KullaniciDogrulama(IFormCollection collection)
+        {
+            int id = collection["Id"].ToInt32();
+            Kullanici kullanici = _context.Kullanici.Find(id)!;
+            string anahtar = collection["Anahtar"];
+            string dogrulamaKodu = collection["DogrulamaKodu"];
+            string dogrulamaKoduMd5 = Md5Helper.CreateMd5(dogrulamaKodu);
+            ViewBag.Anahtar = anahtar;
+
+            if (anahtar == dogrulamaKoduMd5)
+            {
+                kullanici.DogrulandiMi = true;
+                _context.Kullanici.Update(kullanici);
+                int returnValue = _context.SaveChanges();
+
+                if (returnValue > 0)
+                    return RedirectToAction("Index");
+                else
+                    ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            }
+            else
+            {
+                ViewData["ErrorMessage"] = "Doğrulama kodu hatalı. Tekrar gönderilen doğrulama kodunu giriniz.";
+            }
+
+            return View();
+        }
+
+        private void KullaniciDogrulamaKoduGonder(Kullanici kullanici, out string anahtarMd5)
+        {
+            string anahtar = GuidHelper.CreateShortGuid();
+            anahtarMd5 = Md5Helper.CreateMd5(anahtar);
+            string mailIcerik = "Merhaba " + kullanici.Ad + " " + kullanici.Soyad + "<br/> Kullanıcı Doğrulama Kodu: " + anahtar;
+            MailHelper.SendMail("Kullanıcı Doğrulama", mailIcerik, kullanici.Eposta);
+        }
+    }
 }

@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Araba Detay";
+    List<ArabaYorum> arabaYorumList = ViewBag.ArabaYorumList; 
+}
+@using ArabamiSatWeb.Models.Araba 
+@model Araba
+
+@section Style
+{
+    <style>
+        div.row { font-size: 20px; }
+    </style>
+}
+
+
+<div class="row">
+    <div class="col-md-12 mb-5" style="text-align: center">
+        <img src="@(Model.Fotograf)">
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-2">
+        <b>Marka :</b> @Model.Marka.Ad
+    </div>
+    <div class="col-md-2">
+        <b>Model :</b> @Model.MarkaModel.Ad
+    </div>
+    <div class="col-md-2">
+        <b>Yıl :</b> @Model.Yil
+    </div>
+    <div class="col-md-3">
+        <b>Fiyat :</b> @Model.Fiyat
+    </div>
+    <div class="col-md-3">
+        <b>Durum :</b> @(Model.DurumId == 1 ? "Sıfır" : "İkinci El")
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-md-12">
+        <p><b>Açıklama</b> : @Model.Aciklama</p>
+    </div>
+</div>
+
+<h3>Yorumlar</h3>
+
+<div style="margin-bottom: 10px; text-align: right">
+    <a class="btn btn-sm btn-success" asp-area="" asp-controller="ArabaIlan" asp-action="ArabaYorumEkle" asp-route-arabaId="@Model.Id" role="button">Yorum Ekle</a>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Kullanıcı</th>
+        <th scope="col">Yorum</th>
+        <th scope="col">Tarih</th> 
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (ArabaYorum arabaYorum in arabaYorumList)
+    {
+        <tr>
+            <td>@arabaYorum.Id</td>
+            <td>@(arabaYorum.Kullanici.Ad + " " + arabaYorum.Kullanici.Soyad)</td>
+            <td>@arabaYorum.Yorum</td>
+            <td>@arabaYorum.EklenmeTarihi</td> 
+        </tr>
+    }
+    </tbody>
+</table>

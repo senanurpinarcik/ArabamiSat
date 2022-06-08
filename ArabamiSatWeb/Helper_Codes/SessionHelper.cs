@@ -21,38 +21,41 @@ namespace ArabamiSatWeb.Helper_Codes
             get { return httpContextAccessor?.HttpContext; }
         }
 
-        public static void ClearSession()
+        public static void EndSession()
         {
-            HttpContext.Session.Clear();
+            HttpContext.Session.SetString(Constants.KULLANICI_ID, Constants.SESSION_NULL_VALUE);
+            HttpContext.Session.SetString(Constants.AD_SOYAD, Constants.SESSION_NULL_VALUE);
+            HttpContext.Session.SetString(Constants.YONETICI_MI, Constants.SESSION_NULL_VALUE);
         }
 
         public static int GetKullaniciId()
         {
-            int kullaniciId = Convert.ToInt32(HttpContext.Session.GetString("KullaniciId"));
-
+            int kullaniciId = HttpContext.Session.GetString(Constants.KULLANICI_ID).ToInt32();
             return kullaniciId;
         }
         public static void SetKullaniciId(int kullaniciId)
         {
-            HttpContext.Session.SetString("KullaniciId", kullaniciId.ToString());
+            HttpContext.Session.SetString(Constants.KULLANICI_ID, kullaniciId.ToString());
         }
+
         public static string GetAdSoyad()
         {
-            string adSoyad = HttpContext.Session.GetString("AdSoyad");
-            return adSoyad;
+            string? adSoyad = HttpContext.Session.GetString(Constants.AD_SOYAD);
+            return adSoyad ?? "";
         }
         public static void SetAdSoyad(string adSoyad)
         {
-            HttpContext.Session.SetString("AdSoyad", adSoyad);
+            HttpContext.Session.SetString(Constants.AD_SOYAD, adSoyad);
         }
+
         public static bool GetYoneticiMi()
         {
-            bool yoneticiMi = Convert.ToBoolean(HttpContext.Session.GetString("YoneticiMi"));
+            bool yoneticiMi = HttpContext.Session.GetString(Constants.YONETICI_MI).ToBoolean();
             return yoneticiMi;
         }
         public static void SetYoneticiMi(bool yoneticiMi)
         {
-            HttpContext.Session.SetString("YoneticiMi", yoneticiMi.ToString());
+            HttpContext.Session.SetString(Constants.YONETICI_MI, yoneticiMi.ToString());
         }
 
     }

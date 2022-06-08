@@ -6,22 +6,7 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model ArabamiSatWeb.Models.Parametre.MarkaModel
 
-<div class="row">
-    <div class="col-md-12">
-        @if (ViewData["SuccessMessage"] != null)
-        {
-            <div class="alert alert-success" role="alert">
-                @ViewData["SuccessMessage"]
-            </div>
-        }
-        @if (ViewData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger" role="alert">
-                @ViewData["ErrorMessage"]
-            </div>
-        }
-    </div>
-</div>
+@Html.Partial("Partials/_MessagePartial")
 <div class="row">
     <div class="col-md-12">
         <form asp-action="MarkaModelGuncelle" enctype="multipart/form-data" >

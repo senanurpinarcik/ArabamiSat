@@ -1,27 +1,35 @@
 ﻿@{
     ViewBag.Title = "";
 }
+@model ArabamiSatWeb.Models.Kullanici.Kullanici
 
-@Html.Partial("Partials/_MessagePartial")
+
 <div class="row">
-    <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
-        <section class="page-title">
-            @ViewBag.Uyari
-        </section>
-        <section>
-            <form class="form inputs-underline" method="post" action="/Giris/SifremiUnuttum/">
-                <div class="form-group">
-                    <label for="Eposta">E-Posta</label>
-                    <input type="email" class="form-control" required="" name="Eposta" id="Eposta" placeholder="Mail Adresiniz">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="loginBody">
+            <h2>
+                <i class="fa-solid fa-car-tunnel"></i>
+                Arabamı Sat!
+            </h2>
+            <h5>Şifre Sıfırlama</h5>
+            @Html.Partial("Partials/_MessagePartial")
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="SifremiUnuttum">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Eposta" class="control-label"></label>
+                            <input asp-for="Eposta" class="form-control"></input>
+                            <span asp-validation-for="Eposta" class="text-danger"></span>
+                        </div> 
+                        <div class="form-group">
+                            <input type="submit" value="Şifremi Sıfırla" class="btn btn-primary"/>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group center">
-                    <button type="submit" class="btn btn-primary width-100">Doğrulama Kodu Gönder</button>
-                </div>
-            </form>
-
-            <hr>
-
-
-        </section>
+            </div> 
+        </div>
     </div>
-</div>
+    <div class="col-md-4"></div>
+</div> 

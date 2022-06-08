@@ -1,10 +1,10 @@
-﻿using ArabamiSatWeb.Helper_Codes;
+﻿using ArabamiSatWeb.Controllers.Base; 
 using ArabamiSatWeb.Models.Base;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArabamiSatWeb.Controllers
 {
-    public class DashboardController : Controller
+    public class DashboardController : BaseController
     {
         #region Initialize
         private readonly BaseDbContext _context;
@@ -15,10 +15,8 @@ namespace ArabamiSatWeb.Controllers
         #endregion
 
         public IActionResult Index()
-        {
-            MailHelper.SendMail("Test Başlık", "Şifre sıfırlama bla bla", "erkan.kamazoglu@gmail.com");
+        { 
             return View();
-        }
-
+        } 
     }
 }

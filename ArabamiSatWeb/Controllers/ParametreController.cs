@@ -1,4 +1,5 @@
-﻿using ArabamiSatWeb.Helper_Codes;
+﻿using ArabamiSatWeb.Controllers.Base;
+using ArabamiSatWeb.Helper_Codes;
 using ArabamiSatWeb.Models.Base;
 using ArabamiSatWeb.Models.Parametre;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ArabamiSatWeb.Controllers
 {
-    public class ParametreController : Controller
+    public class ParametreController : BaseController
     {
         #region Initialize
         private readonly BaseDbContext _context;
@@ -24,8 +25,7 @@ namespace ArabamiSatWeb.Controllers
         }
 
         public IActionResult MarkaEkle()
-        {
-
+        { 
             return View();
         }
 
@@ -34,7 +34,6 @@ namespace ArabamiSatWeb.Controllers
         {
             string ad = collection.Ad();
             int kullaniciId = SessionHelper.GetKullaniciId();
-            
 
             Marka marka = new Marka
             {
@@ -45,12 +44,8 @@ namespace ArabamiSatWeb.Controllers
 
             _context.Marka.Add(marka);
             int returnValue = _context.SaveChanges();
+            ContextMessageHandler(returnValue);  
 
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
-                     
             return View(marka);
         }
 
@@ -74,11 +69,7 @@ namespace ArabamiSatWeb.Controllers
 
             _context.Marka.Update(marka);
             int returnValue = _context.SaveChanges();
-
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            ContextMessageHandler(returnValue);
 
             return View(marka);
         }
@@ -86,6 +77,7 @@ namespace ArabamiSatWeb.Controllers
         public IActionResult MarkaSil(int id)
         {
             int kullaniciId = Convert.ToInt32(HttpContext.Session.GetString("KullaniciId"));
+
             Marka marka = _context.Marka.Find(id)!;
             marka.SilindiMi = true;
             marka.SilenKullaniciId = kullaniciId;
@@ -93,11 +85,7 @@ namespace ArabamiSatWeb.Controllers
             
             _context.Marka.Update(marka);
             int returnValue = _context.SaveChanges();
-
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            ContextMessageHandler(returnValue);
 
             return View(marka);
         }
@@ -105,9 +93,9 @@ namespace ArabamiSatWeb.Controllers
 
         public IActionResult MarkaModelListe()
         {
-            List<MarkaModel> MarkaModelListe = _context.MarkaModel.Include(i => i.Marka).ToList()
+            List<MarkaModel> markaModelListe = _context.MarkaModel.Include(i => i.Marka).ToList()
                 .Where(i => !i.SilindiMi).ToList();
-            return View(MarkaModelListe);
+            return View(markaModelListe);
         }
 
         public IActionResult MarkaModelEkle()
@@ -126,20 +114,14 @@ namespace ArabamiSatWeb.Controllers
             MarkaModel model = new MarkaModel()
             {
                 Ad = ad,
-                MarkaId = markaId
+                MarkaId = markaId,
+                EkleyenKullaniciId = SessionHelper.GetKullaniciId(),
+                EklenmeTarihi = DateTime.Now
             };
 
             _context.MarkaModel.Add(model);
             int returnValue = _context.SaveChanges();
-
-            if (returnValue > 0)
-            {
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            }
-            else
-            {
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
-            }
+            ContextMessageHandler(returnValue);
 
             List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
             ViewBag.MarkaList = markaList;
@@ -165,14 +147,12 @@ namespace ArabamiSatWeb.Controllers
             MarkaModel model  = _context.MarkaModel.Find(id)!;
             model.MarkaId = markaId;
             model.Ad = ad;
+            model.GuncelleyenKullaniciId = SessionHelper.GetKullaniciId();
+            model.GuncellenmeTarihi = DateTime.Now;
 
             _context.MarkaModel.Update(model);
             int returnValue = _context.SaveChanges();
-
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            ContextMessageHandler(returnValue);
 
             List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
             ViewBag.MarkaList = markaList;
@@ -183,14 +163,12 @@ namespace ArabamiSatWeb.Controllers
         {
             MarkaModel model = _context.MarkaModel.Include(i => i.Marka).Single(i => i.Id == id);
             model.SilindiMi = true;
+            model.SilenKullaniciId = SessionHelper.GetKullaniciId();
+            model.SilinmeTarihi = DateTime.Now;
 
             _context.MarkaModel.Update(model);
             int returnValue = _context.SaveChanges();
-
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            ContextMessageHandler(returnValue);
 
             return View(model);
         }

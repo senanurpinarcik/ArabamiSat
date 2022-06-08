@@ -12,5 +12,11 @@
                 @ViewData["ErrorMessage"]
             </div>
         }
+        @if (ViewData["InfoMessage"] != null)
+        {
+            <div class="alert alert-info" role="alert">
+                @ViewData["InfoMessage"]
+            </div>
+        }
     </div>
 </div>

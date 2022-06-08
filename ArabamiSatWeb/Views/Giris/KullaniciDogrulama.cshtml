@@ -1,0 +1,38 @@
+﻿ @{
+     ViewBag.Title = "";
+     string anahtar = ViewBag.Anahtar;
+ }
+ @model ArabamiSatWeb.Models.Kullanici.Kullanici
+
+
+ <div class="row">
+     <div class="col-md-4"></div>
+     <div class="col-md-4">
+         <div class="loginBody">
+             <h2>
+                 <i class="fa-solid fa-car-tunnel"></i>
+                 Arabamı Sat!
+             </h2>
+             <h5>Kullanıcı Doğrulama</h5>
+             @Html.Partial("Partials/_MessagePartial")
+             <div class="row">
+                 <div class="col-md-12">
+                     <form asp-action="KullaniciDogrulama">
+                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                         <input type="hidden" name="Anahtar" value="@anahtar"/>
+                         <input type="hidden" asp-for="Id"/>
+                         <div class="form-group">
+                             <label asp-for="DogrulamaKodu" class="control-label"></label>
+                             <input asp-for="DogrulamaKodu" class="form-control"></input>
+                             <span asp-validation-for="DogrulamaKodu" class="text-danger"></span>
+                         </div> 
+                         <div class="form-group">
+                             <input type="submit" value="Doğrula" class="btn btn-primary"/>
+                         </div>
+                     </form>
+                 </div>
+             </div> 
+         </div>
+     </div>
+     <div class="col-md-4"></div>
+ </div> 

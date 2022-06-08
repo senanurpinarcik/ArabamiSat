@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = ""; 
+} 
+@model ArabamiSatWeb.Models.Kullanici.Kullanici
+
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="loginBody">
+            <h2>
+                <i class="fa-solid fa-car-tunnel"></i>
+                Arabamı Sat!
+            </h2>
+            <h5>Kayıt Ol</h5>
+            @Html.Partial("Partials/_MessagePartial")
+            <div class="row">
+                <div class="col-md-12">
+                    <form asp-action="KayitOl" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+                        <div class="form-group">
+                            <label asp-for="Ad" class="control-label"></label>
+                            <input asp-for="Ad" type="text" class="form-control" /> 
+                            <span asp-validation-for="Ad" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Soyad" class="control-label"></label>
+                            <input asp-for="Soyad" type="text" class="form-control" />  
+                            <span asp-validation-for="Soyad" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Eposta" class="control-label"></label> 
+                            <input asp-for="Eposta" type="text" class="form-control" />  
+                            <span asp-validation-for="Eposta" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Sifre" class="control-label"></label>
+                            <input asp-for="Sifre" type="password" class="form-control" />  
+                            <span asp-validation-for="Sifre" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Kaydet" class="btn btn-primary" />
+                        </div> 
+                    </form> 
+                </div>
+            </div>  
+        </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
+
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    } 
+}  

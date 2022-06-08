@@ -1,4 +1,5 @@
 ﻿using System.Dynamic;
+using ArabamiSatWeb.Controllers.Base;
 using ArabamiSatWeb.Helper_Codes;
 using ArabamiSatWeb.Models.Araba;
 using ArabamiSatWeb.Models.Base;
@@ -9,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace ArabamiSatWeb.Controllers
 {
-    public class ArabamController : Controller
+    public class ArabamController : BaseController
     {
         #region Initialize
         private readonly BaseDbContext _context;
@@ -34,34 +35,18 @@ namespace ArabamiSatWeb.Controllers
 
             string json = JsonConvert.SerializeObject(dynamicList);
             return json;
-        }
-
-        public async Task<string> UploadImage(IFormFile file)
-        {
-            string pathAbsolute = "";
-            if (file != null)
-            {
-                string imageExtension = Path.GetExtension(file.FileName);
-                string imageName = Guid.NewGuid() + imageExtension;
-                pathAbsolute = $"/upload/{imageName}";
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot" + pathAbsolute);
-
-                using var stream = new FileStream(path, FileMode.Create);
-                await file.CopyToAsync(stream);
-            }
-
-            return pathAbsolute;
-        }
+        } 
 
         public IActionResult Arabalarim()
         {
-            return View(_context.Araba.Include(i => i.Marka).Include(i => i.MarkaModel).Where(i => !i.SilindiMi).ToList());
-        }
-        public IActionResult ArabaAl()
-        {
-            return View(_context.Araba.Include(i => i.Marka).Include(i => i.MarkaModel).Where(i => !i.SilindiMi).ToList());
-        }
+            int kullaniciId = SessionHelper.GetKullaniciId();
+            List<Araba> arabaList = _context.Araba
+                .Include(i => i.Marka)
+                .Include(i => i.MarkaModel)
+                .Where(i => !i.SilindiMi && i.EkleyenKullaniciId == kullaniciId).ToList();
 
+            return View(arabaList);
+        }  
         
         public IActionResult Ekle()
         {
@@ -74,7 +59,7 @@ namespace ArabamiSatWeb.Controllers
         [HttpPost]
         public IActionResult Ekle(IFormCollection collection)
         {
-            List<Marka> markaList = _context.Marka.ToList();
+            List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
             ViewBag.MarkaList = markaList;
 
             int markaId = collection.MarkaId();
@@ -96,17 +81,14 @@ namespace ArabamiSatWeb.Controllers
                 DurumId = durumId,
                 Aciklama = aciklama,
                 Fotograf = fotografPath,
-                EkleyenKullaniciId = -1,
+                EkleyenKullaniciId = SessionHelper.GetKullaniciId(),
                 EklenmeTarihi = DateTime.Now
             };
            
             _context.Araba.Add(araba);
             int returnValue = _context.SaveChanges();
+            ContextMessageHandler(returnValue);
 
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
             return View(araba);
         }
 
@@ -138,15 +120,13 @@ namespace ArabamiSatWeb.Controllers
             model.DurumId = durumId;
             model.Aciklama = aciklama;
             model.Fotograf = fotografPath;
+            model.GuncelleyenKullaniciId = SessionHelper.GetKullaniciId();
+            model.GuncellenmeTarihi = DateTime.Now;
         
 
             _context.Araba.Update(model);
             int returnValue = _context.SaveChanges();
-
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            ContextMessageHandler(returnValue);
 
             List<Marka> markaList = _context.Marka.ToList().Where(i => !i.SilindiMi).ToList();
             ViewBag.MarkaList = markaList;
@@ -156,53 +136,14 @@ namespace ArabamiSatWeb.Controllers
         {
             Araba model = _context.Araba.Find(id)!;
             model.SilindiMi = true;
+            model.SilenKullaniciId = SessionHelper.GetKullaniciId();
+            model.SilinmeTarihi = DateTime.Now;
 
             _context.Araba.Update(model);
             int returnValue = _context.SaveChanges();
-
-            if (returnValue > 0)
-                ViewData["SuccessMessage"] = "İşleminiz başarılı bir şekilde gerçekleştirilmiştir.";
-            else
-                ViewData["ErrorMessage"] = "İşleminiz sırasında bir hata oluştu";
+            ContextMessageHandler(returnValue);
 
             return View(model);
-            
-        }
-        public IActionResult ArabaDetay(IFormCollection collection)
-        {
-            int markaId = collection.MarkaId();
-            int markaModelId = collection.MarkaModelId();
-            int id = collection.Id();
-            Araba model = _context.Araba.Find(id)!;
-            List<Araba> arabaList = _context.Araba.ToList().Where(i => i.Id == collection.Id() && i.MarkaId == markaId && i.MarkaModelId == markaModelId).ToList();
-            ViewBag.ArabaList = arabaList;
-            return View(arabaList);
-        }
-        public IActionResult ArabaYorum()
-        {
-            List<ArabaYorum> arabaYorumList = _context.ArabaYorum.ToList().Where(i => !i.SilindiMi).ToList();
-            ViewBag.ArabaYorumList = arabaYorumList;
-
-            return PartialView();
-        }
-
-        [HttpPost]
-        public IActionResult ArabaYorum(IFormCollection collection)
-        {
-            string yorum = collection["Yorum"];
-            int arabaId = Convert.ToInt32(collection["ArabaId"]);
-            int ekleyenkullaniciId = SessionHelper.GetKullaniciId();
-            string adSoyad = SessionHelper.GetAdSoyad();
-            ArabaYorum arabaYorum = new ArabaYorum
-            {
-                Yorum = yorum,
-                ArabaId = arabaId,
-                EkleyenKullaniciId = -1,
-                EklenmeTarihi = DateTime.Now
-            };
-            _context.ArabaYorum.Add(arabaYorum);
-            return View();
-        }
-
+        } 
     }
 }
