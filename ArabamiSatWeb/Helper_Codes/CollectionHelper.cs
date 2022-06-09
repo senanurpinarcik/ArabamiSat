@@ -19,6 +19,11 @@
             string soyad= (collection["Soyad"]);
             return soyad;
         }
+        public static bool IkiFaktorluDogrulama(this IFormCollection collection)
+        {
+            bool dogrulama = collection["IkiFaktorluDogrulama"].ToBoolean();
+            return dogrulama;
+        }
         public static int Yas(this IFormCollection collection)
         {
             int yas = Convert.ToInt32(collection["Yas"]);

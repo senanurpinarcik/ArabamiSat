@@ -1,33 +1,32 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
-} 
+    margin-bottom: 60px;
+}
 
 header {
     background-color: #9f9a9a;
 }
+
 .carousel-inner {
-    
     max-height: 400px;
 }
 
-img{
-
-    max-height:400px;
+img {
+    max-height: 400px;
 }
 
 .menuGiris {
@@ -52,30 +51,30 @@ footer {
     height: 50px;
     padding: 15px;
     background-color: #343a40;
-} 
+}
 
 .loginBody {
     background-color: #dd2d4a;
     padding: 30px 20px;
     margin-top: 10%
 }
- 
 
-.loginBody h2 {
-    color: white;
-    text-align: center;
-    margin-top: 10px;
-    margin-bottom: 20px;
-}
 
-.loginBody h5 {
-    color: white;
-    text-align: center;
-}
+    .loginBody h2 {
+        color: white;
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
 
-.loginBody label {
-    color: white;
-}
+    .loginBody h5 {
+        color: white;
+        text-align: center;
+    }
+
+    .loginBody label {
+        color: white;
+    }
 
 .loginAnchor {
     color: white;
@@ -83,8 +82,19 @@ footer {
     padding-bottom: 0;
 }
 
-.loginAnchor:hover {
-    color: #212529;
+    .loginAnchor:hover {
+        color: #212529;
+        font-weight: bold;
+        padding-bottom: 0;
+    }
+
+.headerUserInfo { 
     font-weight: bold;
-    padding-bottom: 0;
+    text-decoration: none;
 }
+
+    .headerUserInfo:hover {
+        font-weight: bold;
+        color: #dd2d4a !important;
+        text-decoration: none;
+    }

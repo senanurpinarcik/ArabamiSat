@@ -37,14 +37,17 @@ namespace ArabamiSatWeb.Controllers
             {
                 if (kullanici.DogrulandiMi)
                 {
-                    SessionHelper.SetKullaniciId(kullanici.Id);
-                    SessionHelper.SetAdSoyad(kullanici.Ad + " " + kullanici.Soyad);
-                    SessionHelper.SetYoneticiMi(kullanici.YoneticiMi);
+                    if (kullanici.IkiFaktorluDogrulama)
+                    {
+                        KullaniciDogrulamaKoduGonder(kullanici, "Oturum Açma İşlemi", out string anahtarMd5);
+                        return RedirectToAction("IkiFaktorluDogrulama", "Giris", new { id = kullanici.Id, anahtar = anahtarMd5 });
+                    }
+                    StartSession(kullanici);
                     return RedirectToAction("Arabalarim", "Arabam");
                 }
                 else
                 {
-                    KullaniciDogrulamaKoduGonder(kullanici, out string anahtarMd5);
+                    KullaniciDogrulamaKoduGonder(kullanici, "Kullanıcı Doğrulama", out string anahtarMd5);
                     return RedirectToAction("KullaniciDogrulama", new { id = kullanici.Id,anahtar = anahtarMd5 });
                 }
             }
@@ -81,6 +84,7 @@ namespace ArabamiSatWeb.Controllers
                 Soyad = soyad,
                 Eposta = ePosta,
                 Sifre = sifreMd5,
+                IkiFaktorluDogrulama = true,
                 EklenmeTarihi = DateTime.Now
             };
 
@@ -89,7 +93,7 @@ namespace ArabamiSatWeb.Controllers
 
             if (returnValue > 0)
             {
-                KullaniciDogrulamaKoduGonder(kullanici, out string anahtarMd5);
+                KullaniciDogrulamaKoduGonder(kullanici, "Kullanıcı Doğrulama", out string anahtarMd5);
                 return RedirectToAction("KullaniciDogrulama", new { id = kullanici.Id, anahtar = anahtarMd5 });
             }
             else
@@ -175,12 +179,50 @@ namespace ArabamiSatWeb.Controllers
             return View();
         }
 
-        private void KullaniciDogrulamaKoduGonder(Kullanici kullanici, out string anahtarMd5)
+        public IActionResult IkiFaktorluDogrulama(int id, string anahtar)
+        {
+            Kullanici kullanici = _context.Kullanici.Find(id)!;
+            ViewData["InfoMessage"] = "E-postanıza gelen doğrulama kodunu aşağıya girin.";
+            ViewBag.Anahtar = anahtar;
+            return View(kullanici);
+        }
+
+        [HttpPost]
+        public IActionResult IkiFaktorluDogrulama(IFormCollection collection)
+        {
+            int id = collection["Id"].ToInt32();
+            Kullanici kullanici = _context.Kullanici.Find(id)!;
+            string anahtar = collection["Anahtar"];
+            string dogrulamaKodu = collection["DogrulamaKodu"];
+            string dogrulamaKoduMd5 = Md5Helper.CreateMd5(dogrulamaKodu);
+            ViewBag.Anahtar = anahtar;
+
+            if (anahtar == dogrulamaKoduMd5)
+            {
+                StartSession(kullanici);
+                return RedirectToAction("Arabalarim", "Arabam"); 
+            }
+            else
+            {
+                ViewData["ErrorMessage"] = "Doğrulama kodu hatalı. Tekrar gönderilen doğrulama kodunu giriniz.";
+            }
+
+            return View();
+        }
+
+        private void KullaniciDogrulamaKoduGonder(Kullanici kullanici, string baslik, out string anahtarMd5)
         {
             string anahtar = GuidHelper.CreateShortGuid();
             anahtarMd5 = Md5Helper.CreateMd5(anahtar);
             string mailIcerik = "Merhaba " + kullanici.Ad + " " + kullanici.Soyad + "<br/> Kullanıcı Doğrulama Kodu: " + anahtar;
-            MailHelper.SendMail("Kullanıcı Doğrulama", mailIcerik, kullanici.Eposta);
+            MailHelper.SendMail(baslik, mailIcerik, kullanici.Eposta);
+        }
+
+        private void StartSession(Kullanici kullanici)
+        {
+            SessionHelper.SetKullaniciId(kullanici.Id);
+            SessionHelper.SetAdSoyad(kullanici.Ad + " " + kullanici.Soyad);
+            SessionHelper.SetYoneticiMi(kullanici.YoneticiMi);
         }
     }
 }

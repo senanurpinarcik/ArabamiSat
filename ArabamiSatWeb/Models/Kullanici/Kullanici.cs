@@ -32,6 +32,9 @@ namespace ArabamiSatWeb.Models.Kullanici
 
         public bool YoneticiMi { get; set; }
 
+        [DisplayName("İki Faktörlü Doğrulama")]
+        public bool IkiFaktorluDogrulama { get; set; }
+        
         [DisplayName("Doğrulama Kodu")]
         [NotMapped]
         public string? DogrulamaKodu { get; set; }

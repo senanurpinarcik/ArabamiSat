@@ -8,102 +8,104 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] Arabamı Sat</title>
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 
     @await RenderSectionAsync("Style", false)
 </head>
 <body>
-<header>
+    <header>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">
-                <i class="fa-solid fa-car-tunnel"></i>
-                Arabamı Sat!
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-controller="Dashboard" asp-action="Index">
+                    <i class="fa-solid fa-car-tunnel"></i>
+                    Arabamı Sat!
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <div class="collapse navbar-collapse" id="navbarText">
-                <ul class="navbar-nav mr-auto">
-
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Ana Sayfa</a>
-                    </li>
-
-                    @if (kullaniciId > 0)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Arabam" asp-action="Arabalarim">Araba Sat</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="ArabaIlan" asp-action="ArabaAl">Araba Al</a>
-                        </li>
-                    }
-                    @if (yoneticiMi)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Parametre" asp-action="MarkaListe">Markalar</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Parametre" asp-action="MarkaModelListe">Modeller</a>
-                        </li>
+                <div class="collapse navbar-collapse" id="navbarText">
+                    <ul class="navbar-nav mr-auto">
 
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Kullanici" asp-action="Kullanici">Kullanıcılar</a>
+                            <a class="nav-link" asp-area="" asp-controller="Dashboard" asp-action="Index">Ana Sayfa</a>
                         </li>
-                    }
-                    @if (kullaniciId > 0)
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link menuCikis" asp-area="" asp-controller="Giris" asp-action="Cikis">Çıkış</a>
-                        </li>
-                    }
-                    else
-                    { 
+
+                        @if (kullaniciId > 0)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Arabam" asp-action="Arabalarim">Araba Sat</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="ArabaIlan" asp-action="ArabaAl">Araba Al</a>
+                            </li>
+                        }
+                        @if (yoneticiMi)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Parametre" asp-action="MarkaListe">Markalar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Parametre" asp-action="MarkaModelListe">Modeller</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Kullanici" asp-action="Kullanici">Kullanıcılar</a>
+                            </li>
+                        }
+                        @if (kullaniciId > 0)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link menuCikis" asp-area="" asp-controller="Giris" asp-action="Cikis">Çıkış</a>
+                            </li>
+                        }
+                        else
+                        {
                             <li class="nav-item">
                                 <a class="nav-link menuGiris" asp-area="" asp-controller="Giris" asp-action="Index">Giriş</a>
                             </li>
-                         
-                    }
-                </ul>
 
-                <span class="navbar-text">
-                    @if (kullaniciId > 0)
-                    {
-                        @adSoyad
-                    }
-                </span>
+                        }
+                    </ul>
+
+                    <span class="navbar-text"> 
+                        @if (kullaniciId > 0)
+                        {
+                            <a class="headerUserInfo" asp-controller="Kullanici" asp-action="KullaniciGuncelle">
+                                @(adSoyad)
+                            </a>
+                        } 
+                    </span>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-</header>
-<div class="container">
-    <main role="main" class="pb-3 pt-4">
-        <h2>@ViewData["Title"]</h2>
-        @RenderBody()
-    </main>
-</div>
-
-<footer class="border-top footer text-muted">
+    </header>
     <div class="container">
-        &copy; 2022 - Arabamı Sat!
+        <main role="main" class="pb-3 pt-4">
+            <h2>@ViewData["Title"]</h2>
+            @RenderBody()
+        </main>
     </div>
-</footer>
- 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2022 - Arabamı Sat!
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -21,7 +21,16 @@
             
             if (deger.IsNullOrEmpty())
                 return false;
-            
+
+            try
+            {
+                deger = deger.ToString().Split(',')[0]; 
+            }
+            catch
+            {
+                // ignored
+            }
+
             if ((string)deger == "1" || deger == (object)1 || deger.ToString()?.ToLower() == "true" || (string)deger == "")
                 return true;
 
