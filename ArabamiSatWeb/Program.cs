@@ -33,8 +33,9 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Dashboard}/{action=Index}/{id?}"
     );
-app.MapControllerRoute(name: "arabam",
-    pattern: "arabam",
+app.MapControllerRoute(
+    name: "Arabam",
+    pattern: "Arabam",
     defaults: new { controller = "Arabam", action = "Arabalarim" });
 
 app.Run();
